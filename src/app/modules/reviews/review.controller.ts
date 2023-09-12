@@ -5,9 +5,20 @@ import sendResponse from '../../../shared/sendResponse';
 import httpStatus from 'http-status';
 import { ReviewService } from './review.service';
 import { IReview } from './review.interface';
+import { User } from '../user/user.model';
+import { Review } from './review.model';
+import ApiError from '../../../errors/ApiError';
 
 const createReview = catchAsync(async (req: Request, res: Response) => {
   const { ...review } = req.body;
+  let user;
+  if (req.user?.userPhoneNumber) {
+    const { userPhoneNumber } = req.user;
+    user = await User.findOne({
+      phoneNumber: userPhoneNumber,
+    });
+  }
+  review.user = user?._id;
   const result = await ReviewService.createReview(review);
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -47,6 +58,20 @@ const getAllReviewsForSingleBook = catchAsync(
 const updateReview = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
   const updatedData = req.body;
+  let user;
+  if (req.user?.userPhoneNumber) {
+    const { userPhoneNumber } = req.user;
+    user = await User.findOne({
+      phoneNumber: userPhoneNumber,
+    });
+  }
+  const reviewUser = await Review.findById(id);
+  if (!user?._id.equals(reviewUser?.user)) {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      'You are not authorized to update this review'
+    );
+  }
 
   const result = await ReviewService.updateReview(id, updatedData);
 
@@ -60,6 +85,22 @@ const updateReview = catchAsync(async (req: Request, res: Response) => {
 
 const deleteReview = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
+
+  let user;
+  if (req.user?.userPhoneNumber) {
+    const { userPhoneNumber } = req.user;
+    user = await User.findOne({
+      phoneNumber: userPhoneNumber,
+    });
+  }
+  const reviewUser = await Review.findById(id);
+  if (!user?._id.equals(reviewUser?.user)) {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      'You are not authorized to update this review'
+    );
+  }
+
   const result = await ReviewService.deleteReview(id);
   sendResponse<IReview>(res, {
     statusCode: httpStatus.OK,

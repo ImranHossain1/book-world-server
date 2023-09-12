@@ -5,9 +5,12 @@ const createReviewZodSchema = z.object({
     book: z.string().nonempty({
       message: 'book id is required',
     }),
-    user: z.string().nonempty({
-      message: 'user id is required',
-    }),
+    user: z
+      .string()
+      .nonempty({
+        message: 'user id is required',
+      })
+      .optional(),
     rating: z.number().positive({
       message: 'Rating required',
     }),
@@ -18,12 +21,8 @@ const createReviewZodSchema = z.object({
 });
 const updateReviewZodSchema = z.object({
   body: z.object({
-    book: z.string().nonempty({
-      message: 'book id is required',
-    }),
-    user: z.string().nonempty({
-      message: 'user id is required',
-    }),
+    book: z.string().nonempty().optional(),
+    user: z.string().nonempty().optional(),
     rating: z.number().positive().optional(),
     message: z.string().nonempty().optional(),
   }),

@@ -2,7 +2,9 @@ import { IReview } from './review.interface';
 import { Review } from './review.model';
 
 const createReview = async (payload: IReview) => {
-  const result = (await Review.create(payload)).populate('book');
+  const result = await (
+    await (await Review.create(payload)).populate('book')
+  ).populate('user');
   return result;
 };
 
