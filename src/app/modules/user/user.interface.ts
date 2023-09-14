@@ -11,6 +11,7 @@ export type IUserRole = 'admin' | 'reader';
 export type IUser = {
   phoneNumber: string;
   role: IUserRole;
+  email: string;
   password: string;
   name: UserName;
   address: string;
@@ -18,8 +19,8 @@ export type IUser = {
 
 export type UserModel = {
   isUserExist(
-    phoneNumber: string
-  ): Promise<Pick<IUser, 'phoneNumber' | 'password' | 'role'>>;
+    email: string
+  ): Promise<Pick<IUser, 'email' | 'password' | 'role'>>;
   isPasswordMatch(
     givenPassword: string,
     savedPassword: string

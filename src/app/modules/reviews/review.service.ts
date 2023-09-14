@@ -19,8 +19,8 @@ const updateReview = async (
   id: string,
   payload: Partial<IReview>
 ): Promise<IReview | null> => {
-  const { message, rating } = payload;
-  const updatedReviewData: Partial<IReview> = { message, rating };
+  const { message } = payload;
+  const updatedReviewData: Partial<IReview> = { message };
 
   const result = await Review.findOneAndUpdate({ _id: id }, updatedReviewData, {
     new: true,

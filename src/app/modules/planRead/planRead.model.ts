@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose';
-import { IReview, ReviewModel } from './review.interface';
-const ReviewSchema = new Schema<IReview>(
+import { IPlan, PlanModel } from './planRead.interface';
+const PlanSchema = new Schema<IPlan>(
   {
     book: {
       type: Schema.Types.ObjectId,
@@ -12,9 +12,9 @@ const ReviewSchema = new Schema<IReview>(
       ref: 'User',
       required: true,
     },
-    message: {
-      type: String,
-      required: true,
+    complete: {
+      type: Boolean,
+      default: false,
     },
   },
   {
@@ -25,4 +25,4 @@ const ReviewSchema = new Schema<IReview>(
   }
 );
 
-export const Review = model<IReview, ReviewModel>('Review', ReviewSchema);
+export const Plan = model<IPlan, PlanModel>('plan', PlanSchema);

@@ -11,6 +11,9 @@ const createUserZodSchema = z.object({
     phoneNumber: z.string().nonempty({
       message: 'phoneNumber is required',
     }),
+    email: z.string().nonempty({
+      message: 'Email is required',
+    }),
     name: z.object({
       firstName: z.string().nonempty({
         message: 'firstName is required',
@@ -21,7 +24,7 @@ const createUserZodSchema = z.object({
     }),
     address: z.string().nonempty({
       message: 'address is required',
-    })
+    }),
   }),
 });
 
@@ -36,7 +39,7 @@ const updateUserZodSchema = z.object({
         lastName: z.string().nonempty().optional(),
       })
       .optional(),
-    address: z.string().nonempty().optional()
+    address: z.string().nonempty().optional(),
   }),
 });
 

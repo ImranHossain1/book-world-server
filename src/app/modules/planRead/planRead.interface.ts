@@ -3,10 +3,10 @@ import { Model, Types } from 'mongoose';
 import { IUser } from '../user/user.interface';
 import { IBook } from '../books/book.interface';
 
-export type IReview = {
+export type IPlan = {
   book: Types.ObjectId | IBook;
   user: Types.ObjectId | IUser;
-  message: string;
+  complete: boolean;
 };
 
-export type ReviewModel = Model<IReview, Record<string, unknown>>;
+export type PlanModel = Model<IPlan, Record<string, unknown>>;

@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose';
-import { IReview, ReviewModel } from './review.interface';
-const ReviewSchema = new Schema<IReview>(
+import { IWish, WishModel } from './wishList.interface';
+const WishSchema = new Schema<IWish>(
   {
     book: {
       type: Schema.Types.ObjectId,
@@ -12,10 +12,6 @@ const ReviewSchema = new Schema<IReview>(
       ref: 'User',
       required: true,
     },
-    message: {
-      type: String,
-      required: true,
-    },
   },
   {
     timestamps: true,
@@ -25,4 +21,4 @@ const ReviewSchema = new Schema<IReview>(
   }
 );
 
-export const Review = model<IReview, ReviewModel>('Review', ReviewSchema);
+export const Wish = model<IWish, WishModel>('wish', WishSchema);

@@ -8,16 +8,33 @@ import { userFilterableFields } from './user.constant';
 import { paginationFields } from '../../constants/pagination';
 import { UserService } from './user.service';
 import { User } from './user.model';
-
+import config from '../../../config';
+import { ILoginUserResponse } from '../auth/auth.interface';
+import { AuthService } from '../auth/auth.service';
 const createUser = catchAsync(async (req: Request, res: Response) => {
   const { ...userData } = req.body;
+  const { email, password } = userData;
   const result = await UserService.createUser(userData);
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: 'User created Successfully',
-    data: result,
-  });
+  const loginData = {
+    email,
+    password,
+  };
+  if (result) {
+    const signIn = await AuthService.loginUser(loginData);
+    const { refreshToken, ...others } = signIn;
+    //set refresh token into cookie
+    const cookieOptions = {
+      secure: config.env === 'production',
+      httpOnly: true,
+    };
+    res.cookie('refreshToken', refreshToken, cookieOptions);
+    sendResponse<ILoginUserResponse>(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'User created Successfully',
+      data: others,
+    });
+  }
 });
 
 const getAllUsers = catchAsync(async (req: Request, res: Response) => {

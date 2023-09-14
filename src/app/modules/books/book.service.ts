@@ -103,6 +103,7 @@ const updateBook = async (
   const result = await Book.findOneAndUpdate({ _id: id }, updatedBookData, {
     new: true,
   });
+
   return result;
 };
 

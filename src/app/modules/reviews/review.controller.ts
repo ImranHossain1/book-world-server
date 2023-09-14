@@ -6,19 +6,25 @@ import httpStatus from 'http-status';
 import { ReviewService } from './review.service';
 import { IReview } from './review.interface';
 import { User } from '../user/user.model';
-import { Review } from './review.model';
 import ApiError from '../../../errors/ApiError';
+import { Review } from './review.model';
+/* import { Review } from './review.model';
+import ApiError from '../../../errors/ApiError'; */
 
 const createReview = catchAsync(async (req: Request, res: Response) => {
+  const bookId = req.params;
   const { ...review } = req.body;
   let user;
-  if (req.user?.userPhoneNumber) {
-    const { userPhoneNumber } = req.user;
+  //console.log('req.user', req.user);
+  if (req.user?.userEmail) {
+    const { userEmail } = req.user;
     user = await User.findOne({
-      phoneNumber: userPhoneNumber,
+      email: userEmail,
     });
   }
+
   review.user = user?._id;
+  review.book = bookId.id;
   const result = await ReviewService.createReview(review);
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -27,19 +33,6 @@ const createReview = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
-
-/* const getAllReviews = catchAsync(async (req: Request, res: Response) => {
-  const paginationOptions = pick(req.query, paginationFields);
-  const result = await ReviewService.getAllReviews(paginationOptions);
-
-  sendResponse<IReview[]>(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: 'Reviews found successfully!',
-    meta: result.meta,
-    data: result.data,
-  });
-}); */
 
 const getAllReviewsForSingleBook = catchAsync(
   async (req: Request, res: Response) => {
@@ -59,18 +52,22 @@ const updateReview = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
   const updatedData = req.body;
   let user;
-  if (req.user?.userPhoneNumber) {
-    const { userPhoneNumber } = req.user;
+  if (req.user?.userEmail) {
+    const { userEmail } = req.user;
     user = await User.findOne({
-      phoneNumber: userPhoneNumber,
+      email: userEmail,
     });
   }
+
   const reviewUser = await Review.findById(id);
-  if (!user?._id.equals(reviewUser?.user)) {
-    throw new ApiError(
-      httpStatus.BAD_REQUEST,
-      'You are not authorized to update this review'
-    );
+  //console.log(reviewUser);
+  if (reviewUser) {
+    if (!user?._id.equals(reviewUser?.user.toString())) {
+      throw new ApiError(
+        httpStatus.BAD_REQUEST,
+        'You are not authorized to update this review'
+      );
+    }
   }
 
   const result = await ReviewService.updateReview(id, updatedData);
@@ -87,17 +84,17 @@ const deleteReview = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
 
   let user;
-  if (req.user?.userPhoneNumber) {
-    const { userPhoneNumber } = req.user;
+  if (req.user?.userEmail) {
+    const { userEmail } = req.user;
     user = await User.findOne({
-      phoneNumber: userPhoneNumber,
+      email: userEmail,
     });
   }
   const reviewUser = await Review.findById(id);
-  if (!user?._id.equals(reviewUser?.user)) {
+  if (!user?._id.equals(String(reviewUser?.user))) {
     throw new ApiError(
       httpStatus.BAD_REQUEST,
-      'You are not authorized to update this review'
+      'You are not authorized to Delete this review'
     );
   }
 

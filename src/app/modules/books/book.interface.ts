@@ -4,14 +4,13 @@ export type IBook = {
   author: string;
   genre: string;
   publicationDate: string;
-  price: number;
 };
 
 export type BookModel = Model<IBook, Record<string, unknown>>;
 
 export type IBookFilters = {
   searchTerm?: string;
-  title?: string;
+  publicationDate?: string;
   author?: string;
   genre?: string;
 };
