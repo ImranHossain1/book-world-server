@@ -4,7 +4,7 @@ import { BookRoutes } from '../modules/books/book.route';
 import { ReviewRoutes } from '../modules/reviews/review.route';
 import { AuthRoutes } from '../modules/auth/auth.route';
 import { WishListRoutes } from '../modules/wishList/wishList.route';
-import { PlanReadRoutes, PlanReadtRoutes } from '../modules/planRead/planRead.route';
+import { PlanReadRoutes } from '../modules/planRead/planRead.route';
 
 const router = express.Router();
 const moduleRoutes = [
