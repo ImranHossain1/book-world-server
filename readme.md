@@ -25,7 +25,7 @@ This is the backend server for the Book World application, built with MongoDB, N
 
 ## Introduction
 
-The Book World Server serves as the backend for the Book World application. It provides the necessary APIs and services for the client-side application to function. This server handles user authentication, book data storage, and more.
+The Book World Server serves as the backend for the Book World application. It provides the necessary APIs and services for the client-side application to function. This server handles user authentication, book data storage and more.
 
 ## Features
 
